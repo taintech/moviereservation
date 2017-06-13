@@ -1,20 +1,20 @@
 package com.taintech.moviereservation.actors
 
-import akka.actor.{ActorSystem, Props}
+import akka.actor.{ ActorSystem, Props }
 import akka.event.LoggingAdapter
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.settings.ConnectionPoolSettings
-import akka.http.scaladsl.{HttpExt, HttpsConnectionContext}
-import akka.stream.{ActorMaterializer, Materializer}
-import akka.testkit.{DefaultTimeout, EventFilter, ImplicitSender, TestKit}
+import akka.http.scaladsl.{ HttpExt, HttpsConnectionContext }
+import akka.stream.{ ActorMaterializer, Materializer }
+import akka.testkit.{ DefaultTimeout, EventFilter, ImplicitSender, TestKit }
 import com.taintech.moviereservation.actors.ReservationActor.MovieTitleAssigned
 import com.typesafe.config.ConfigFactory
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
+import org.scalatest.{ BeforeAndAfterAll, Matchers, WordSpecLike }
 
-import scala.concurrent.{ExecutionContextExecutor, Future}
+import scala.concurrent.{ ExecutionContextExecutor, Future }
 
 class MovieTitleActorSpec
     extends TestKit(

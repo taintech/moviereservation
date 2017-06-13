@@ -1,8 +1,8 @@
 package com.taintech.moviereservation.actors
 
-import akka.actor.{Actor, ActorLogging, ActorRef}
+import akka.actor.{ Actor, ActorLogging, ActorRef }
 import akka.http.scaladsl.HttpExt
-import akka.http.scaladsl.model.{HttpRequest, HttpResponse, StatusCodes}
+import akka.http.scaladsl.model.{ HttpRequest, HttpResponse, StatusCodes }
 import akka.stream.ActorMaterializer
 import akka.util.ByteString
 import com.taintech.moviereservation.actors.ReservationActor.MovieTitleAssigned

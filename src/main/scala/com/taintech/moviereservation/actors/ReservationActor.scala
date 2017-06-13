@@ -1,7 +1,7 @@
 package com.taintech.moviereservation.actors
 
-import akka.actor.{ActorLogging, ActorRef}
-import akka.persistence.{PersistentActor, RecoveryCompleted}
+import akka.actor.{ ActorLogging, ActorRef }
+import akka.persistence.{ PersistentActor, RecoveryCompleted }
 
 class ReservationActor(movieTitleActor: ActorRef) extends PersistentActor with ActorLogging {
   import ReservationActor._

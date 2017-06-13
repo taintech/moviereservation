@@ -1,9 +1,9 @@
 package com.taintech.moviereservation.actors
 
-import akka.actor.{ActorSystem, Props}
-import akka.testkit.{ImplicitSender, TestKit, TestProbe}
+import akka.actor.{ ActorSystem, Props }
+import akka.testkit.{ ImplicitSender, TestKit, TestProbe }
 import com.typesafe.config.ConfigFactory
-import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
+import org.scalatest.{ BeforeAndAfterAll, Matchers, WordSpecLike }
 
 class ReservationActorSpec
     extends TestKit(
@@ -56,7 +56,7 @@ class ReservationActorSpec
       expectMsg(NoSeatsAvailable)
     }
     "not reserve seat for an unknown movie" in {
-      reservationActor ! SeatReserved("unknownMovie",  testScreenId)
+      reservationActor ! SeatReserved("unknownMovie", testScreenId)
       expectMsg(MovieNotFound)
     }
     "not reserve seat for an unknown screenId" in {
@@ -68,7 +68,7 @@ class ReservationActorSpec
       expectMsg(MovieInfo(testImdbId, testScreenId, Some(testMovieTitle), 3, 3))
     }
     "not retrieve information for an unknown movie" in {
-      reservationActor ! GetMovieInfo("unknownMovie",  testScreenId)
+      reservationActor ! GetMovieInfo("unknownMovie", testScreenId)
       expectMsg(MovieNotFound)
     }
     "not retrieve information for an unknown screenId" in {

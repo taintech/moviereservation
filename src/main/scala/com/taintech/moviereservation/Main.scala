@@ -1,11 +1,11 @@
 package com.taintech.moviereservation
 
-import akka.actor.{ActorSystem, Props}
-import akka.event.{Logging, LoggingAdapter}
+import akka.actor.{ ActorSystem, Props }
+import akka.event.{ Logging, LoggingAdapter }
 import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
-import com.taintech.moviereservation.actors.{MovieTitleActor, ReservationActor}
+import com.taintech.moviereservation.actors.{ MovieTitleActor, ReservationActor }
 import com.taintech.moviereservation.routes.ReservationService
 import com.taintech.moviereservation.utils.Config
 

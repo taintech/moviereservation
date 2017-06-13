@@ -1,13 +1,13 @@
 package com.taintech.moviereservation.routes
 
 import akka.actor.ActorSystem
-import akka.event.{Logging, LoggingAdapter}
-import akka.http.scaladsl.model.{HttpEntity, MediaTypes, StatusCodes}
+import akka.event.{ Logging, LoggingAdapter }
+import akka.http.scaladsl.model.{ ContentTypes, HttpEntity, MediaTypes, StatusCodes }
 import akka.http.scaladsl.server._
-import akka.http.scaladsl.testkit.{RouteTestTimeout, ScalatestRouteTest}
+import akka.http.scaladsl.testkit.{ RouteTestTimeout, ScalatestRouteTest }
 import akka.testkit.TestProbe
 import akka.util.Timeout
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{ Matchers, WordSpec }
 
 import scala.concurrent.duration._
 
@@ -46,11 +46,10 @@ class ReservationServiceSpec extends WordSpec with Matchers with ScalatestRouteT
       probe.reply(MovieInfo("tt0111161", "screen_123456", Some("The Shawshank Redemption"), 100, 50))
       check {
         status shouldEqual StatusCodes.OK
-        // TODO Spray Json lost order of ouput json file https://github.com/spray/spray-json/issues/119
-//        responseEntity shouldEqual HttpEntity(
-//          ContentTypes.`application/json`,
-//          """{"imdbId": "tt0111161","screenId": "screen_123456","movieTitle": "The Shawshank Redemption","availableSeats": 100,"reservedSeats": 50}"""
-//        )
+        responseEntity shouldEqual HttpEntity(
+          ContentTypes.`application/json`,
+          """{"reservedSeats":50,"screenId":"screen_123456","title":"The Shawshank Redemption","imdbId":"tt0111161","availableSeats":100}"""
+        )
       }(result)
     }
   }
