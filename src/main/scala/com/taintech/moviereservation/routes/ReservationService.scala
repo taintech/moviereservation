@@ -31,9 +31,9 @@ class ReservationService(
     post {
       path("register-movie") {
         entity(as[MovieRegistered]) {
-          onCompleteOfCommand {
+          onReservationCommandComplete {
             case MovieRegisteredSuccessfully => (StatusCodes.OK, "Movie registered.")
-            case MovieAlreadyRegistered => (StatusCodes.BadRequest, "Bad request. Movie already registered.")
+            case MovieAlreadyRegistered      => (StatusCodes.BadRequest, "Bad request. Movie already registered.")
           }
         }
       }
@@ -41,10 +41,9 @@ class ReservationService(
       post {
         path("reserve-seat") {
           entity(as[SeatReserved]) {
-            onCompleteOfCommand {
+            onReservationCommandComplete {
               case SeatReservedSuccessfully => (StatusCodes.OK, "Seat reserved.")
-              case NoSeatsAvailable => (StatusCodes.BadRequest, "No seats available.")
-              case MovieNotFound => (StatusCodes.NotFound, "Movie not found.")
+              case NoSeatsAvailable         => (StatusCodes.BadRequest, "No seats available.")
             }
           }
         }
@@ -52,21 +51,22 @@ class ReservationService(
       get {
         pathPrefix("movie-info" / Segment / Segment) {
           case (imdbId, screenId) =>
-            onCompleteOfCommand {
+            onReservationCommandComplete {
               case movieInfo: MovieInfo => movieInfo
-              case MovieNotFound => (StatusCodes.NotFound, "Movie not found.")
             }(GetMovieInfo(imdbId, screenId))
         }
       }
 
-  def onCompleteOfCommand[T](pf: PartialFunction[Any, ToResponseMarshallable])(cmd: T): Route =
-    onComplete(reservationActor ? cmd) {
-      case Success(result) if pf.isDefinedAt(result) => complete(pf(result))
-      case Success(otherResult) =>
-        log.error(s"Unexpected result while performing command $cmd:\n" + otherResult)
-        complete(StatusCodes.InternalServerError, "Unexpected error.")
-      case Failure(e) =>
-        log.error(e, s"Failure while performing command $cmd:\n")
-        complete(StatusCodes.InternalServerError, "Internal failure.")
+  def onReservationCommandComplete[T](pf: PartialFunction[Any, ToResponseMarshallable]): T => Route =
+    cmd =>
+      onComplete(reservationActor ? cmd) {
+        case Success(result) if pf.isDefinedAt(result) => complete(pf(result))
+        case Success(MovieNotFound)                    => complete(StatusCodes.NotFound, "Movie not found.")
+        case Success(otherResult) =>
+          log.error(s"Unexpected result while performing command $cmd:\n" + otherResult)
+          complete(StatusCodes.InternalServerError, "Unexpected error.")
+        case Failure(e) =>
+          log.error(e, s"Failure while performing command $cmd:\n")
+          complete(StatusCodes.InternalServerError, "Internal failure.")
     }
 }
