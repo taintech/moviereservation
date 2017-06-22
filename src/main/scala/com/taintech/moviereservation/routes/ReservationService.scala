@@ -31,7 +31,7 @@ class ReservationService(
     post {
       path("register-movie") {
         entity(as[MovieRegistered]) {
-          onCompleteOfCommand(_) {
+          onCompleteOfCommand {
             case MovieRegisteredSuccessfully => (StatusCodes.OK, "Movie registered.")
             case MovieAlreadyRegistered => (StatusCodes.BadRequest, "Bad request. Movie already registered.")
           }
@@ -41,7 +41,7 @@ class ReservationService(
       post {
         path("reserve-seat") {
           entity(as[SeatReserved]) {
-            onCompleteOfCommand(_) {
+            onCompleteOfCommand {
               case SeatReservedSuccessfully => (StatusCodes.OK, "Seat reserved.")
               case NoSeatsAvailable => (StatusCodes.BadRequest, "No seats available.")
               case MovieNotFound => (StatusCodes.NotFound, "Movie not found.")
@@ -52,14 +52,14 @@ class ReservationService(
       get {
         pathPrefix("movie-info" / Segment / Segment) {
           case (imdbId, screenId) =>
-            onCompleteOfCommand(GetMovieInfo(imdbId, screenId)) {
+            onCompleteOfCommand {
               case movieInfo: MovieInfo => movieInfo
               case MovieNotFound => (StatusCodes.NotFound, "Movie not found.")
-            }
+            }(GetMovieInfo(imdbId, screenId))
         }
       }
 
-  def onCompleteOfCommand[T](cmd: T)(pf: PartialFunction[Any, ToResponseMarshallable]): Route =
+  def onCompleteOfCommand[T](pf: PartialFunction[Any, ToResponseMarshallable])(cmd: T): Route =
     onComplete(reservationActor ? cmd) {
       case Success(result) if pf.isDefinedAt(result) => complete(pf(result))
       case Success(otherResult) =>
