@@ -21,14 +21,14 @@ class ReservationService(
   implicit val log: LoggingAdapter,
   implicit val timeout: Timeout,
   implicit val executionContext: ExecutionContextExecutor
-) {
+) extends OKRoutes {
 
   implicit val reqisterMovieFormat = jsonFormat3(MovieRegistered)
   implicit val reserverSeatFormat = jsonFormat2(SeatReserved)
   implicit val movieInfoFormat = jsonFormat5(MovieInfo)
 
   val route: Route =
-    post {
+    ok ~ post {
       path("register-movie") {
         entity(as[MovieRegistered]) {
           onReservationCommandComplete {
