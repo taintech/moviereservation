@@ -48,7 +48,7 @@ class ReservationServiceSpec extends WordSpec with Matchers with ScalatestRouteT
         status shouldEqual StatusCodes.OK
         responseEntity shouldEqual HttpEntity(
           ContentTypes.`application/json`,
-          """{"reservedSeats":50,"screenId":"screen_123456","title":"The Shawshank Redemption","imdbId":"tt0111161","availableSeats":100}"""
+          """{"availableSeats":100,"imdbId":"tt0111161","reservedSeats":50,"screenId":"screen_123456","title":"The Shawshank Redemption"}"""
         )
       }(result)
     }
